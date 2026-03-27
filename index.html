@@ -6,83 +6,88 @@
     <title>Little Oven Atelier - Japanese Bakery</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <!-- 🏡 HEADER (ROOF) -->
-    <header class="header">
-        <div class="header-content">
-            <h1 class="logo">🍞 Little Oven Atelier</h1>
-            <p class="tagline">温かい手作りパン</p>
-        </div>
-        <div class="roof"></div>
-    </header>
-
-    <!-- 🏗️ MAIN LAYOUT -->
-    <div class="container">
-        <!-- 📌 SIDEBAR (HANGING SIGNS) -->
-        <aside class="sidebar">
-            <nav class="nav-menu">
-                <button class="nav-btn active" data-tab="fresh">
-                    <span class="nav-label">🌸 Fresh</span>
-                </button>
-                <button class="nav-btn" data-tab="commission">
-                    <span class="nav-label">✨ Commission</span>
-                </button>
-                <button class="nav-btn" data-tab="adoptable">
-                    <span class="nav-label">💝 Adoptable</span>
-                </button>
-                <button class="nav-btn" data-tab="about">
-                    <span class="nav-label">📖 About</span>
-                </button>
-            </nav>
-        </aside>
-
-        <!-- 📺 MAIN CONTENT -->
-        <main class="main-content">
-            <!-- 🎌 CURTAIN CATEGORY SYSTEM (NO SCROLL-Y) -->
-            <div class="curtain-section">
-                <div class="curtain-container">
-                    <div class="curtain-wrapper">
-                        <div class="curtain-track" id="curtainTrack">
-                            <!-- Items will be dynamically inserted here -->
-                        </div>
-                    </div>
-                    <button class="curtain-nav prev-btn" id="prevBtn">❮</button>
-                    <button class="curtain-nav next-btn" id="nextBtn">❯</button>
+<body class="light-mode">
+    <!-- 🏡 BACKGROUND -->
+    <div class="bg-container">
+        <!-- 🏗️ LAYOUT -->
+        <div class="layout-wrapper">
+            
+            <!-- 📌 SIDEBAR (Khung cửa xanh) -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-box">🍞 Jenikone!</div>
                 </div>
-            </div>
+                
+                <nav class="nav-menu">
+                    <button class="nav-btn active" data-tab="fresh">
+                        <span class="nav-icon">🌸</span>
+                        <span class="nav-label">Fresh</span>
+                    </button>
+                    <button class="nav-btn" data-tab="commission">
+                        <span class="nav-icon">✨</span>
+                        <span class="nav-label">Commission</span>
+                    </button>
+                    <button class="nav-btn" data-tab="adoptable">
+                        <span class="nav-icon">💝</span>
+                        <span class="nav-label">Adoptable</span>
+                    </button>
+                    <button class="nav-btn" data-tab="about">
+                        <span class="nav-icon">📖</span>
+                        <span class="nav-label">About</span>
+                    </button>
+                </nav>
+            </aside>
 
-            <!-- 📋 TAB CONTENT (SCROLLABLE) -->
-            <div class="content-area">
-                <!-- FRESH TAB -->
-                <section id="fresh" class="tab-content active">
-                    <h2>Fresh Breads</h2>
-                    <p class="placeholder">🍞 Placeholder - Fresh Breads Content</p>
-                </section>
+            <!-- 📺 MAIN AREA -->
+            <main class="main-area">
+                
+                <!-- 🌙 DARK MODE TOGGLE -->
+                <button class="dark-mode-btn" id="darkModeBtn">🌙</button>
 
-                <!-- COMMISSION TAB -->
-                <section id="commission" class="tab-content">
-                    <h2>Commission</h2>
-                    <p class="placeholder">✨ Placeholder - Commission Content</p>
-                </section>
-
-                <!-- ADOPTABLE TAB (GRID CARDS) -->
-                <section id="adoptable" class="tab-content">
-                    <h2>Adoptable Shelf</h2>
-                    <div class="card-grid" id="cardGrid">
-                        <!-- Cards will be dynamically inserted here -->
+                <!-- 🎌 CATEGORY BAR (Horizontal) -->
+                <div class="category-bar">
+                    <div class="category-wrapper">
+                        <button class="cat-nav prev-btn" id="catPrevBtn">❮</button>
+                        <div class="category-track" id="categoryTrack">
+                            <!-- Categories inserted here -->
+                        </div>
+                        <button class="cat-nav next-btn" id="catNextBtn">❯</button>
                     </div>
-                </section>
+                </div>
 
-                <!-- ABOUT TAB -->
-                <section id="about" class="tab-content">
-                    <h2>About Us</h2>
-                    <p class="placeholder">📖 Placeholder - About Content</p>
-                </section>
-            </div>
-        </main>
+                <!-- 📋 CONTENT AREA (Scrollable) -->
+                <div class="content-wrapper">
+                    <!-- FRESH -->
+                    <section id="fresh" class="tab-content active">
+                        <h2>Fresh Breads</h2>
+                        <p class="placeholder">🍞 Fresh content here</p>
+                    </section>
+
+                    <!-- COMMISSION -->
+                    <section id="commission" class="tab-content">
+                        <h2>Commission</h2>
+                        <p class="placeholder">✨ Commission content here</p>
+                    </section>
+
+                    <!-- ADOPTABLE -->
+                    <section id="adoptable" class="tab-content">
+                        <h2>Adoptable Shelf</h2>
+                        <div class="card-grid" id="cardGrid">
+                            <!-- Cards inserted here -->
+                        </div>
+                    </section>
+
+                    <!-- ABOUT -->
+                    <section id="about" class="tab-content">
+                        <h2>About Us</h2>
+                        <p class="placeholder">📖 About content here</p>
+                    </section>
+                </div>
+            </main>
+        </div>
     </div>
 
-    <!-- 📱 POPUP MODAL -->
+    <!-- 📱 MODAL -->
     <div class="modal" id="cardModal">
         <div class="modal-content">
             <button class="modal-close" id="closeModal">&times;</button>
