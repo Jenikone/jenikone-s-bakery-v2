@@ -1,16 +1,16 @@
 // ================================
-// SAMPLE DATA
+// DATA
 // ================================
 
 const categoryData = {
-    fresh: ['🥐 Croissant', '🍞 Sourdough', '🥯 Bagel', '🧈 Butter Roll', '🌾 Wheat', '🥜 Nut Bread'],
-    commission: ['💌 Love Letter', '🎂 Cake Design', '🍰 Pastry Art', '🎨 Custom', '✨ Special', '🌸 Seasonal'],
+    fresh: ['🥐 Croissant', '🍞 Sourdough', '🥯 Bagel', '🧈 Butter', '🌾 Wheat', '🥜 Nut'],
+    commission: ['💌 Letter', '🎂 Cake', '🍰 Pastry', '🎨 Custom', '✨ Special', '🌸 Seasonal'],
     adoptable: ['🎨 Canvas', '🌸 Spring', '🍂 Autumn', '🌙 Night', '☀️ Summer', '❄️ Winter'],
     about: ['📖 Story', '👨‍🍳 Chef', '🏠 Location', '💝 Mission', '🌍 Community', '📞 Contact']
 };
 
 const adoptableCards = [
-    { id: 1, title: 'Canvas I', emoji: '🎨', desc: 'Modern Artwork', price: '50k', status: 'available' },
+    { id: 1, title: 'Canvas I', emoji: '🎨', desc: 'Modern Art', price: '50k', status: 'available' },
     { id: 2, title: 'Spring Blossom', emoji: '🌸', desc: 'Pastel Vibes', price: '45k', status: 'available' },
     { id: 3, title: 'Autumn Glow', emoji: '🍂', desc: 'Warm Tones', price: '48k', status: 'sold' },
     { id: 4, title: 'Night Dream', emoji: '🌙', desc: 'Dark Fantasy', price: '55k', status: 'available' },
@@ -22,51 +22,39 @@ const adoptableCards = [
 ];
 
 // ================================
-// STATE MANAGEMENT
+// STATE
 // ================================
 
 let currentTab = 'fresh';
-let curtainOffset = 0;
+let categoryOffset = 0;
 const MAX_CATEGORIES = 6;
 
 // ================================
-// AUDIO (Web Audio API)
+// AUDIO
 // ================================
 
-function playSound(soundType) {
+function playSound(type) {
     try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         
-        if (soundType === 'curtain') {
-            const now = audioContext.currentTime;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        if (type === 'curtain') {
             osc.frequency.setValueAtTime(400, now);
             osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
-            
             gain.gain.setValueAtTime(0.3, now);
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-            
             osc.start(now);
             osc.stop(now + 0.15);
-        } else if (soundType === 'tab') {
-            const now = audioContext.currentTime;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            
+        } else if (type === 'tab') {
             osc.frequency.setValueAtTime(600, now);
             osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-            
             gain.gain.setValueAtTime(0.2, now);
             gain.gain.exponentialRampToValueAtTime(0, now + 0.1);
-            
             osc.start(now);
             osc.stop(now + 0.1);
         }
@@ -76,58 +64,57 @@ function playSound(soundType) {
 }
 
 // ================================
-// CURTAIN SYSTEM
+// CATEGORY SYSTEM
 // ================================
 
-function renderCurtain() {
-    const track = document.getElementById('curtainTrack');
+function renderCategories() {
+    const track = document.getElementById('categoryTrack');
     const items = categoryData[currentTab].slice(0, MAX_CATEGORIES);
     
     track.innerHTML = '';
     
     items.forEach((item, index) => {
-        const curtainItem = document.createElement('div');
-        curtainItem.className = 'curtain-item';
-        curtainItem.textContent = item;
-        curtainItem.dataset.index = index;
+        const el = document.createElement('div');
+        el.className = 'category-item';
+        el.textContent = item;
+        el.dataset.index = index;
         
-        // Add collapsed class to previous items when offset increases
-        if (index < curtainOffset) {
-            curtainItem.classList.add('collapsed');
+        if (index < categoryOffset) {
+            el.classList.add('collapsed');
         }
         
-        curtainItem.addEventListener('click', () => {
-            console.log('Category selected:', item);
+        el.addEventListener('click', () => {
+            console.log('Selected:', item);
             playSound('curtain');
         });
         
-        track.appendChild(curtainItem);
+        track.appendChild(el);
     });
     
-    updateCurtainNav();
+    updateCategoryNav();
 }
 
-function shiftCurtain(direction) {
+function shiftCategory(direction) {
     const items = categoryData[currentTab].slice(0, MAX_CATEGORIES);
     
-    if (direction === 'next' && curtainOffset < items.length - 1) {
-        curtainOffset++;
+    if (direction === 'next' && categoryOffset < items.length - 1) {
+        categoryOffset++;
         playSound('curtain');
-    } else if (direction === 'prev' && curtainOffset > 0) {
-        curtainOffset--;
+    } else if (direction === 'prev' && categoryOffset > 0) {
+        categoryOffset--;
         playSound('curtain');
     }
     
-    renderCurtain();
+    renderCategories();
 }
 
-function updateCurtainNav() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+function updateCategoryNav() {
+    const prevBtn = document.getElementById('catPrevBtn');
+    const nextBtn = document.getElementById('catNextBtn');
     const items = categoryData[currentTab].slice(0, MAX_CATEGORIES);
     
-    prevBtn.disabled = curtainOffset === 0;
-    nextBtn.disabled = curtainOffset >= items.length - 1;
+    prevBtn.disabled = categoryOffset === 0;
+    nextBtn.disabled = categoryOffset >= items.length - 1;
 }
 
 // ================================
@@ -135,28 +122,23 @@ function updateCurtainNav() {
 // ================================
 
 function switchTab(tabName) {
-    // Hide all tabs
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
     
-    // Show selected tab
     document.getElementById(tabName).classList.add('active');
     
-    // Update active button
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
+    event.target.closest('.nav-btn').classList.add('active');
     
-    // Reset curtain
     currentTab = tabName;
-    curtainOffset = 0;
+    categoryOffset = 0;
     
     playSound('tab');
-    renderCurtain();
+    renderCategories();
     
-    // Render cards only if adoptable tab
     if (tabName === 'adoptable') {
         renderCards();
     }
@@ -167,16 +149,14 @@ function switchTab(tabName) {
 // ================================
 
 function renderCards() {
-    const cardGrid = document.getElementById('cardGrid');
-    cardGrid.innerHTML = '';
+    const grid = document.getElementById('cardGrid');
+    grid.innerHTML = '';
     
     adoptableCards.forEach(card => {
-        const cardEl = document.createElement('div');
-        cardEl.className = 'card';
-        cardEl.innerHTML = `
-            <div class="card-image">
-                <span>${card.emoji}</span>
-            </div>
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.innerHTML = `
+            <div class="card-image">${card.emoji}</div>
             <div class="card-content">
                 <div>
                     <h3 class="card-title">${card.title}</h3>
@@ -189,16 +169,13 @@ function renderCards() {
             </div>
         `;
         
-        cardEl.addEventListener('click', () => {
-            openModal(card);
-        });
-        
-        cardGrid.appendChild(cardEl);
+        el.addEventListener('click', () => openModal(card));
+        grid.appendChild(el);
     });
 }
 
 // ================================
-// MODAL FUNCTIONS
+// MODAL
 // ================================
 
 function openModal(card) {
@@ -208,13 +185,36 @@ function openModal(card) {
     document.getElementById('modalDesc').textContent = card.desc;
     document.getElementById('modalPrice').textContent = `Price: ${card.price}`;
     document.getElementById('modalStatus').textContent = card.status === 'sold' ? '🔴 SOLD OUT' : '✅ AVAILABLE';
-    
     modal.classList.add('active');
 }
 
 function closeModal() {
-    const modal = document.getElementById('cardModal');
-    modal.classList.remove('active');
+    document.getElementById('cardModal').classList.remove('active');
+}
+
+// ================================
+// DARK MODE
+// ================================
+
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    updateDarkModeBtn();
+}
+
+function updateDarkModeBtn() {
+    const btn = document.getElementById('darkModeBtn');
+    const isDark = document.body.classList.contains('dark-mode');
+    btn.textContent = isDark ? '☀️' : '🌙';
+}
+
+function initDarkMode() {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) {
+        document.body.classList.add('dark-mode');
+    }
+    updateDarkModeBtn();
 }
 
 // ================================
@@ -222,32 +222,27 @@ function closeModal() {
 // ================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Init
+    initDarkMode();
+    renderCategories();
+    
     // Tab buttons
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            switchTab(e.target.closest('.nav-btn').dataset.tab);
+        btn.addEventListener('click', () => {
+            switchTab(btn.dataset.tab);
         });
     });
     
-    // Curtain navigation
-    document.getElementById('prevBtn').addEventListener('click', () => {
-        shiftCurtain('prev');
-    });
+    // Category nav
+    document.getElementById('catPrevBtn').addEventListener('click', () => shiftCategory('prev'));
+    document.getElementById('catNextBtn').addEventListener('click', () => shiftCategory('next'));
     
-    document.getElementById('nextBtn').addEventListener('click', () => {
-        shiftCurtain('next');
-    });
+    // Dark mode
+    document.getElementById('darkModeBtn').addEventListener('click', toggleDarkMode);
     
-    // Modal close
+    // Modal
     document.getElementById('closeModal').addEventListener('click', closeModal);
-    
-    // Close modal when clicking outside
     document.getElementById('cardModal').addEventListener('click', (e) => {
-        if (e.target.id === 'cardModal') {
-            closeModal();
-        }
+        if (e.target.id === 'cardModal') closeModal();
     });
-    
-    // Initialize
-    renderCurtain();
 });
